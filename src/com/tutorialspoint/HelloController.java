@@ -1,5 +1,7 @@
 package com.tutorialspoint;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -7,7 +9,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 
+import com.beans.Cls;
 import com.beans.Question;
+import com.utils.StudentsUtility;
 @Controller
 
 public class HelloController {
@@ -34,10 +38,12 @@ public class HelloController {
    @RequestMapping(value = "/addQuestionAction")
    public ModelAndView addQuestionAction(@Validated Question question,ModelMap map) {
 	   System.out.println("inside add question");
-	  /*List<Cls> clsList = StudentsUtility.getClassesList();
+	   List<Cls> clsList = StudentsUtility.getClassesList();
+	   
+	  /*;
 	  List<Subject> subjectsList = StudentsUtility.getSubjectsList();*/
 	  ModelAndView model = new ModelAndView("addQuestion", "command", new Question());
-	 // model.addObject("clsList", clsList);
+	  model.addObject("clsList", clsList);
 	   return model;
    }
 }
