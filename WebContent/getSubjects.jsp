@@ -22,7 +22,7 @@ PrintWriter out1 = response.getWriter();
 %>
 
 
-	<select name="subjectName1" id="subjectName1">
+	<select name="subjectName" id="subjectName">
 		<%for(Subject s :subjectList){ %>
 			<option value="<%s.getId(); %>"><%=s.getName() %></option>
 		<%} %>

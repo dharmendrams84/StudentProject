@@ -10,6 +10,16 @@ public class Question {
 	
 	private String subjectName;
 
+	private String marks ;
+	
+	public String getMarks() {
+		return marks;
+	}
+
+	public void setMarks(String marks) {
+		this.marks = marks;
+	}
+
 	public String getSubjectName() {
 		return subjectName;
 	}

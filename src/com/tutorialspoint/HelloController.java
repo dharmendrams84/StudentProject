@@ -23,14 +23,14 @@ public class HelloController {
    @RequestMapping("/") 
    public String login() {
 	   System.out.println("inside login controller");
-     /// model.addAttribute("message", "Hello Spring MVC Framework!");
+     
       return "login";
    }
    
    @RequestMapping(value = "/loginAction")
-   public String loginAction() {
+   public String loginAction(ModelMap map) {
 	   System.out.println("inside login Action controller");
-     
+	   
       return "studentHome";
    }
    
@@ -45,5 +45,14 @@ public class HelloController {
 	  ModelAndView model = new ModelAndView("addQuestion", "command", new Question());
 	  model.addObject("clsList", clsList);
 	   return model;
+   }
+   
+   
+   @RequestMapping(value = "/addQuestionDtlsAction" , method=RequestMethod.POST)
+   public String addQuestionDtlsAction(@Validated Question question,ModelMap map) {
+	   	  
+	  System.out.println(question.getDetails()+ " : "+question.getName());
+	  
+	   return "";
    }
 }

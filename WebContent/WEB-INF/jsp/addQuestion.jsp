@@ -13,7 +13,7 @@ var  xmlHttp=GetXmlHttpObject();
 
 function showSubjects(job_id)
 {
-         //alert('class selected  '+job_id);
+         alert('class selected  '+job_id);
 
     if(document.getElementById("className").value!="-1")
     {
@@ -108,7 +108,7 @@ function GetXmlHttpObject()
 </script>
 </head>
 <body>
-	<form action="addQuestionDetailsAction" method="post">
+	<form action="addQuestionDtlsAction" method="post">
 		<%-- <table>
 			<tr>
 				<td><c:forEach items="${clsList}" var="clsList1">
@@ -157,7 +157,7 @@ function GetXmlHttpObject()
 			<tbody>
 				<tr>
 					<td>Enter Question name :</td>
-					<td><input type="text" name="questionName" id="questionName"></td>
+					<td><input type="text" name="name" id="name"></td>
 					<td>Marks &nbsp; &nbsp;</td>
 					<td><input type="text" name="marks" id="marks" size="3"
 						maxlength="3" /></td>
@@ -168,7 +168,7 @@ function GetXmlHttpObject()
 		<table>
 			<tbody>
 				<tr>
-					<td><textarea id="questionDetails" name="questionDetails"
+					<td><textarea id="details" name="details"
 							rows="5" cols="70"></textarea></td>
 				</tr>
 			</tbody>
