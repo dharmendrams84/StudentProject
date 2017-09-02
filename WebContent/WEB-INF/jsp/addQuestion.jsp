@@ -13,123 +13,10 @@
 <script type="text/javascript" src="http://www.technicalkeeda.com/js/javascripts/plugin/json2.js"></script>
 
 <script>
-
-function setSubjectId(value){
-	alert('--'+value);
-	
-}
-
-
-var  xmlHttp=GetXmlHttpObject();
-
-function showSubjects(job_id)
-{
-         alert('class selected  '+job_id);
-
-    if(document.getElementById("className").value!="-1")
-    {
-
-        if (xmlHttp==null)
-        {
-            alert ("Browser does not support HTTP Request");
-            return;
-        }
-
-        var url="getSubjects.jsp";
-        url=url+"?classid="+ job_id ;
-      	
-        xmlHttp.onreadystatechange = stateChanged ;
-        xmlHttp.open("GET",url,true);
-        xmlHttp.send(null);
-    }
-    else
-    {
-        alert("Please Select Manufacture ");
-    }
-
-}
-
-function stateChanged()
-{
-   
-   
-    if (xmlHttp.readyState==4 || xmlHttp.readyState=="complete")
-    {       
-          
-        var showdata = xmlHttp.responseText;
-   
-        var ele = document.getElementById("inner_div");
-        ele.innerHTML=showdata;                                    
-    }        
-   
-}
-
-
-function GetXmlHttpObject()
-{
-    var xmlHttp=null;
-    try
-    {
-        // Firefox, Opera 8.0+, Safari
-        xmlHttp=new XMLHttpRequest();
-    }
-    catch (e)
-    {
-        //Internet Explorer
-        try
-        {
-            xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
-        }
-        catch (e)
-        {
-            xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
-        }
-    }
-    return xmlHttp;
-}    
- 
-       function validateIncentiveLogin(){
-                           
-        var mainmoduleid = document.getElementById("mainmoduleid").value ;
-      
-     
-        
-         if(mainmoduleid == "SELECT MAIN MODULE"){
-            
-        	 
-               alert('Please select main module');
-              
-               return false ;
-           }
-          
-            if(mainmoduleid == '0004'){
-              
-               return true ;
-           }
-             var submoduleid =  document.getElementById('submodid').value ;
-            if(submoduleid == 'SELECT'){
-               alert('Please select task type');
-               return false ;
-           }
-          
-          
-           return true ;
-       }
-
-       
        function getSubjects(){
-    	   alert('--inside get subjects--'+document.getElementById("classId").value);
-    	   $('#subjectName').html('');
-
+	   	   $('#subjectName').html('');
     	   var classId = document.getElementById("classId").value;
-    	   /* var subjectNames = document.getElementById('subjectName');
-   	  		  for (var i = 0; i < subjectNames.length; i++) {
-   	    	
-   	    	alert(''+subjectNames[i].name+ );
-   	    	subjectNames.remove(i);
-   	    } */
-
-    	   $.ajax({
+    	    $.ajax({
     	    type: "get",
     	    url: "getSubjects",
     	    cache: false,    
@@ -137,36 +24,16 @@ function GetXmlHttpObject()
                 xhr.setRequestHeader("Accept", "application/json");  
                 xhr.setRequestHeader("Content-Type", "application/json");  
             },
-
-			
     	    data:'classId=' + classId, 
     	    success: function(data){
-    	    alert('response obtained'+data);
+    	    
     	    var subjectName = document.getElementById('subjectName');
-    	    /*
-    	    for (var i = 0; i < subjectName.length; i++) {
-    	    	
-    	    	alert(''+subjectName[i].name+ );
-    	    	subjectName.remove(i);
-    	    }
- */
-
+    	 
     	    for(var i in data)
     	    {
-    	    	
-    	    	
-    	         var id = data[i].id;
+    			 var id = data[i].id;
     	         var name = data[i].name;
-    	         alert(name +  ' '+id)
-    	         /* for (var i = 0; i < dd.options.length; i++) { */
-    	        	/*  dd.options[i].value  = name;
-    	        	 dd.options[i].text  = name;
-    	        	 alert('--- '+dd.options[i].value); */
-    	           /*   if (dd.options[i].text === textToFind) {
-    	                 dd.selectedIndex = i;
-    	                 break;
-    	             } */
-    	        // }
+    	         
     	        	 var option = document.createElement('option');
     	        	 option.value = id; 
     	        	 option.innerHTML = name;
@@ -174,29 +41,15 @@ function GetXmlHttpObject()
 
     	        
     	    }},    	    
-    	   
-
 	   	    error: function(jqXHR, textStatus, errorThrown){      
     	     alert('Error while request..'+jqXHR+ ' '+textStatus+ ' '+errorThrown);
     	    }
     	   });
     	  }
-
-       
-       
-       
 </script>
 </head>
 <body>
 	<form action="addQuestionDtlsAction" method="post">
-		<%-- <table>
-			<tr>
-				<td><c:forEach items="${clsList}" var="clsList1">
-						<c:out value="${clsList1.id}" />
-						<c:out value="${clsList1.name}" />
-					</c:forEach></td>
-			</tr>
-		</table> --%>
 		<table>
 			<tbody>
 				<tr>
@@ -220,7 +73,7 @@ function GetXmlHttpObject()
 					<td>Select Subject</td>
 					<td>
 					<select name="subjectName" id="subjectName" onchange="setSubjectId(this.value);">
-					<!-- <option value="select subject">select subject</option> -->
+					<option value="select subject">select subject</option>
 		
 		
 				</select>
