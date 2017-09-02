@@ -1,3 +1,5 @@
+<%@page import="com.beans.Subject"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -7,7 +9,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
-<script type="text/javascript">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://www.technicalkeeda.com/js/javascripts/plugin/json2.js"></script>
+
+<script>
+
+function setSubjectId(value){
+	alert('--'+value);
+	
+}
+
 
 var  xmlHttp=GetXmlHttpObject();
 
@@ -85,6 +96,7 @@ function GetXmlHttpObject()
         
          if(mainmoduleid == "SELECT MAIN MODULE"){
             
+        	 
                alert('Please select main module');
               
                return false ;
@@ -104,7 +116,75 @@ function GetXmlHttpObject()
            return true ;
        }
 
+       
+       function getSubjects(){
+    	   alert('--inside get subjects--'+document.getElementById("classId").value);
+    	   $('#subjectName').html('');
 
+    	   var classId = document.getElementById("classId").value;
+    	   /* var subjectNames = document.getElementById('subjectName');
+   	  		  for (var i = 0; i < subjectNames.length; i++) {
+   	    	
+   	    	alert(''+subjectNames[i].name+ );
+   	    	subjectNames.remove(i);
+   	    } */
+
+    	   $.ajax({
+    	    type: "get",
+    	    url: "getSubjects",
+    	    cache: false,    
+    	    beforeSend: function(xhr) {  
+                xhr.setRequestHeader("Accept", "application/json");  
+                xhr.setRequestHeader("Content-Type", "application/json");  
+            },
+
+			
+    	    data:'classId=' + classId, 
+    	    success: function(data){
+    	    alert('response obtained'+data);
+    	    var subjectName = document.getElementById('subjectName');
+    	    /*
+    	    for (var i = 0; i < subjectName.length; i++) {
+    	    	
+    	    	alert(''+subjectName[i].name+ );
+    	    	subjectName.remove(i);
+    	    }
+ */
+
+    	    for(var i in data)
+    	    {
+    	    	
+    	    	
+    	         var id = data[i].id;
+    	         var name = data[i].name;
+    	         alert(name +  ' '+id)
+    	         /* for (var i = 0; i < dd.options.length; i++) { */
+    	        	/*  dd.options[i].value  = name;
+    	        	 dd.options[i].text  = name;
+    	        	 alert('--- '+dd.options[i].value); */
+    	           /*   if (dd.options[i].text === textToFind) {
+    	                 dd.selectedIndex = i;
+    	                 break;
+    	             } */
+    	        // }
+    	        	 var option = document.createElement('option');
+    	        	 option.value = id; 
+    	        	 option.innerHTML = name;
+    	        	 document.getElementById('subjectName').appendChild(option);
+
+    	        
+    	    }},    	    
+    	   
+
+	   	    error: function(jqXHR, textStatus, errorThrown){      
+    	     alert('Error while request..'+jqXHR+ ' '+textStatus+ ' '+errorThrown);
+    	    }
+    	   });
+    	  }
+
+       
+       
+       
 </script>
 </head>
 <body>
@@ -121,8 +201,8 @@ function GetXmlHttpObject()
 			<tbody>
 				<tr>
 					<td>Select Class</td>
-					<td><select name="className" id="className"
-						onchange="showSubjects(this.value)">
+					<td><select name="classId" id="classId"
+						onchange="getSubjects()">
 							<c:forEach items="${clsList}" var="clsList1">
 								<option value="${clsList1.id}">${clsList1.name}</option>
 							</c:forEach>
@@ -138,16 +218,15 @@ function GetXmlHttpObject()
 				<tr></tr>
 				<tr>
 					<td>Select Subject</td>
-					<td><!-- <select name="subjectName" id="subjectName" >
-							<option value="Physics">Physics</option>
-							<option value="Chemistry">Chemistry</option>
-							<option value="Mathematics">Mathematics</option>
-							<option value="Botany">Botany</option>
-							<option value="Zoology">Zoology</option>
-					</select> -->
-					<div id="inner_div" name="inner_div"></div>
-					</td>
-
+					<td>
+					<select name="subjectName" id="subjectName" onchange="setSubjectId(this.value);">
+					<!-- <option value="select subject">select subject</option> -->
+		
+		
+				</select>
+	
+						</td>
+			
 				</tr>
 			</tbody>
 		</table>
