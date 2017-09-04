@@ -8,5 +8,6 @@
 </head>
 <body>
  <a href="addQuestionAction">Add Question</a>
+ <a href="prepareQuestionAction">Add Question</a>
 </body>
 </html>

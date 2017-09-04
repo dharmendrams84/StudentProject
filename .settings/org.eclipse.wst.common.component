@@ -3,6 +3,7 @@
     <wb-module deploy-name="HelloWeb">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/js"/>
         <property name="context-root" value="HelloWeb"/>
         <property name="java-output-path" value="/HelloWeb/build/classes"/>
     </wb-module>

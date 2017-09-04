@@ -13,9 +13,62 @@
 <script type="text/javascript" src="http://www.technicalkeeda.com/js/javascripts/plugin/json2.js"></script>
 
 <script>
+
+		function validateForm(){
+			
+			var classId = document.forms["addQuestionForm"]["classId"].value;
+			if(classId=="select class"){
+				$('#subjectName').html('');
+				
+				alert('Please select class');
+			return false;
+			}
+			
+			var subjectName = document.forms["addQuestionForm"]["subjectName"].value;
+			if(subjectName=="select subject"){
+				
+				alert('Please select subject');
+			return false;
+			}
+			
+			
+			var marksEntered = document.forms["addQuestionForm"]["marks"].value;
+			marksEntered = marksEntered.trim();
+			if(marksEntered.length==0){
+				alert('Enter value for marks');
+			return false;
+			}
+			
+			if(isNaN(marksEntered)){
+				alert('marks must be a number');
+			return false;
+			}
+			
+			var name = document.forms["addQuestionForm"]["name"].value;
+			
+			name = name.trim();
+			if(name.length==0){
+			  alert('Please assign name for the question');
+			return false;
+			}
+			
+			var details = document.forms["addQuestionForm"]["details"].value;
+			details = details.trim();
+			if(details.length==0){
+			 alert('Please enter question');
+			return false;
+			}
+			return true;
+		}
+
+
        function getSubjects(){
-	   	   $('#subjectName').html('');
     	   var classId = document.getElementById("classId").value;
+    	   if(classId=='select class'){
+    		   alert("select class")
+    	   }else{
+    	     
+	   	   $('#subjectName').html('');
     	    $.ajax({
     	    type: "get",
     	    url: "getSubjects",
@@ -45,17 +98,19 @@
     	     alert('Error while request..'+jqXHR+ ' '+textStatus+ ' '+errorThrown);
     	    }
     	   });
+    	   }
     	  }
 </script>
 </head>
 <body>
-	<form action="addQuestionDtlsAction" method="post">
+	<form name="addQuestionForm" id="addQuestionForm" action="addQuestionDtlsAction" method="post" onsubmit="return validateForm()">
 		<table>
 			<tbody>
 				<tr>
 					<td>Select Class</td>
 					<td><select name="classId" id="classId"
 						onchange="getSubjects()">
+						 <option value="select class">select class </option>
 							<c:forEach items="${clsList}" var="clsList1">
 								<option value="${clsList1.id}">${clsList1.name}</option>
 							</c:forEach>

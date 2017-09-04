@@ -18,11 +18,12 @@
 PrintWriter out1 = response.getWriter();
   
   subjectList = StudentsUtility.getSubjectsList(classid);
+  request.setAttribute("subjectList",subjectList);
  
 %>
 
 
-	<select name="subjectName" id="subjectName">
+	<select name="subjectName" id="subjectName" onchange="setSubjectId(this.value);">
 		<%for(Subject s :subjectList){ %>
 			<option value="<%s.getId(); %>"><%=s.getName() %></option>
 		<%} %>
