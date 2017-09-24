@@ -18,6 +18,18 @@ public class QuestionPaper {
 	
 	private int noOfQuestion;
 	
+	private String subjectName ;
+	
+	public String getSubjectName() {
+		return subjectName;
+	}
+
+
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
+	}
+
+
 	private List<Question> questionsSelected ;
 	
 

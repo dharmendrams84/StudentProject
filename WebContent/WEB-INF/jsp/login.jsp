@@ -5,13 +5,35 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
+<script type="text/javascript">
+function validateForm(){
+	
+	var username = document.forms["loginForm"]["username"].value;
+	if(username==""){
+		alert('Please enter user name');
+	return false;
+	}
+	
+	var password = document.forms["loginForm"]["password"].value;
+	if(password==""){
+		alert('Please enter password');
+	return false;
+	}
+	return true;
+}	
+	
+	
+	
+
+</script>
+
 </head>
 <body>
- <form action="loginAction" >
+ <form  name="loginForm" id= "loginForm" action="loginAction"  onsubmit="return validateForm()">
    <div>
     <table>
-     <tr> <td>User name</td> <td> <input type="text" name="username"/> </td> </tr>
-     <tr> <td>Password</td> <td> <input type="text" name="password"> </td> </tr>
+     <tr> <td>User name</td> <td> <input type="text" name="username" id="username"/> </td> </tr>
+     <tr> <td>Password</td> <td> <input type="password" name="password" id="password"> </td> </tr>
      <tr> <td colspan="2"> <input type="submit" value="submit"/> </td> </tr>
     </table>
    </div>

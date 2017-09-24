@@ -1,5 +1,6 @@
 package com.tutorialspoint;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +24,9 @@ import org.springframework.validation.annotation.Validated;
 
 import com.beans.Cls;
 import com.beans.Question;
+import com.beans.QuestionPaper;
 import com.beans.Subject;
+import com.google.gson.Gson;
 import com.utils.StudentsUtility;
 @Controller
 
@@ -52,12 +55,67 @@ public class HelloController {
    public ModelAndView addQuestionAction(@Validated Question question,ModelMap map) {
 	   System.out.println("inside add question");
 	   List<Cls> clsList = StudentsUtility.getClassesList();
-	   
-	  /*;
-	  List<Subject> subjectsList = StudentsUtility.getSubjectsList();*/
+	    
+	 
 	  ModelAndView model = new ModelAndView("addQuestion", "command", new Question());
 	  model.addObject("clsList", clsList);
 	   return model;
+   }
+   
+   
+   @RequestMapping(value = "/classSubjectAction")
+   public ModelAndView classSubjectAction(@Validated QuestionPaper questionPaper,ModelMap map) {
+	   
+	  List<Cls> clsList = StudentsUtility.getClassesList();
+	  map.addAttribute("clsList", clsList);
+	  ModelAndView model = new ModelAndView("selectClassAndSubject", "command", new QuestionPaper());
+	  
+	  return model; 
+   }
+   
+   @RequestMapping(value = "/addNewQuestionsAction")
+   public ModelAndView addNewQuestionsAction(@Validated QuestionPaper questionPaper,ModelMap map) {
+	   
+	System.out.println("inside addQuestionsAction"+questionPaper.getClassId());
+	List<Question> questionsList = StudentsUtility.getQuestionsForQuestionPaper(questionPaper.getClassId(), questionPaper.getSubjectId());
+	questionPaper.setQuestionsList(questionsList);
+	ModelAndView model = new ModelAndView("questionPaper", "command", questionPaper);
+	
+	return model; 
+   }
+   
+   @RequestMapping(value = "/prepareQuestionPaperAction")
+   public ModelAndView prepareQuestionPaperAction(@Validated QuestionPaper questionPaper,ModelMap map) {
+	   
+	System.out.println("inside addQuestionsAction"+questionPaper.getClassId());
+	
+	List<Question> questionsList = StudentsUtility.getQuestionsForQuestionPaper(questionPaper.getClassId(), questionPaper.getSubjectId());
+	questionPaper.setQuestionsList(questionsList);
+	ModelAndView model = new ModelAndView("question", "command", questionPaper);
+	
+	return model; 
+   }
+   
+   @RequestMapping(value = "/addQuestionToPaperAction" , method=RequestMethod.POST)
+   public ModelAndView addQuestionToPaperAction(@Validated QuestionPaper questionPaper,HttpServletRequest request) {
+	   
+	   String classId  = request.getParameter("classId");
+	   String subjectId  = request.getParameter("subjectId");
+	   String questionId  = request.getParameter("questionId");
+	   Question question = StudentsUtility.getQuestion(classId, subjectId, questionId);
+	   if(questionPaper.getQuestionsSelected()==null){
+		   List<Question> selectedQuestions = new ArrayList<Question>();
+		   selectedQuestions.add(question);
+		   questionPaper.setQuestionsSelected(selectedQuestions);
+	   }else{
+		   questionPaper.getQuestionsSelected().add(question);
+	   }
+	   List<Question> quList = StudentsUtility.getQuestionsForQuestionPaper(classId, subjectId);
+	   questionPaper.setQuestionsList(quList);
+	   StudentsUtility.questionsList.add(question);
+	   ModelAndView model = new ModelAndView("questionPaper", "command", questionPaper);
+	
+	return model; 
    }
    
    
@@ -75,10 +133,28 @@ public class HelloController {
 	   return "questionAdded";
    }
   
-   @RequestMapping(value = "/getSubjects" , method=RequestMethod.GET)   
    
-   public @ResponseBody String getSubjects(ModelMap model, HttpServletRequest request, HttpServletResponse response
-		   ) {
+  
+   @RequestMapping(value = "/getQuestionDetails" , method=RequestMethod.GET)   
+   public @ResponseBody String getQuestionDetails(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
+	   String classId  = request.getParameter("classId");
+	   String subjectId  = request.getParameter("subjectId");
+	   String questionId  = request.getParameter("questionId");
+	   Question question = StudentsUtility.getQuestion(classId, subjectId, questionId);
+	   String jsonString =  "";
+	  try{
+		  Gson gson = new Gson();
+
+		  jsonString = gson.toJson(question);
+	  }catch(Exception e){
+		  e.printStackTrace();
+	  }
+	   return jsonString;
+   }
+   
+   
+   @RequestMapping(value = "/getSubjects" , method=RequestMethod.GET)   
+   public @ResponseBody String getSubjects(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
 	   String classId  = request.getParameter("classId");
 	   System.out.println("inside getSubjects ajax className "+classId);
 	   List<Subject> subjects = StudentsUtility.getSubjectsList(classId);
@@ -96,10 +172,21 @@ public class HelloController {
 	   return jsonString;
    }
    
+   @RequestMapping(value = "/getSubjectDetails" , method=RequestMethod.GET)   
+   public @ResponseBody String getSubjectDetails(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
+	   String subjectId  = request.getParameter("subjectId");
+	   System.out.println("inside getSubjects ajax subjectId "+subjectId);
+	   Subject subjects = StudentsUtility.getSubject(subjectId);
+	  /* JsonResponse res = new JsonResponse();*/
+
+	  
+	   response.setStatus(200);
+	   String jsonString =  "";
+	   Gson gson = new Gson();
+
+		  jsonString = gson.toJson(subjects);
+	   return jsonString;
+   }
    
-  /* @RequestMapping(value = "/getSubjects" , method=RequestMethod.POST)
-   public String getSubjects(@Validated Question question,ModelMap map,HttpServletRequest request) {
-	  System.out.println("inside getSubjects");
-	  return "";
-   }*/
+
 }

@@ -65,7 +65,7 @@
        function getSubjects(){
     	   var classId = document.getElementById("classId").value;
     	   if(classId=='select class'){
-    		   alert("select class")
+    		   alert("select class");
     	   }else{
     	     
 	   	   $('#subjectName').html('');
@@ -129,11 +129,8 @@
 					<td>
 					<select name="subjectName" id="subjectName" onchange="setSubjectId(this.value);">
 					<option value="select subject">select subject</option>
-		
-		
-				</select>
-	
-						</td>
+		     		</select>
+					</td>
 			
 				</tr>
 			</tbody>

@@ -18,4 +18,6 @@
 <bean id = "cls" class = "com.beans.Cls"></bean>
       <bean id = "subject" class = "com.beans.Subject"></bean>
       <bean id = "dbUtils" class = "com.beans.DBUtils"></bean>
+      
+      
 </beans>

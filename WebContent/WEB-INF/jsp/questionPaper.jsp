@@ -94,6 +94,8 @@
 			
 		</table><br><br>
 		
+		
+		
  	<textarea id="questionDetailsDiv" style="height: 200px; width: 300px;"></textarea>
  	<br>
  	<input type="submit" value="add question">

@@ -7,7 +7,8 @@
 <title>Insert title here</title>
 </head>
 <body>
- <a href="addQuestionAction">Add Question</a>
- <a href="prepareQuestionAction">Add Question</a>
+ <a href="addQuestionAction">Add Question</a><br><br>
+ <a href="editQuestionAction">Edit Question</a><br><br>
+ <a href="classSubjectAction">Prepare Question</a>
 </body>
 </html>

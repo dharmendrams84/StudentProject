@@ -2,6 +2,7 @@ package com.utils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import javax.swing.text.html.HTMLDocument.HTMLReader.PreAction;
 import com.beans.Cls;
 import com.beans.DBUtils;
 import com.beans.Question;
+import com.beans.QuestionPaper;
 import com.beans.Subject;
 
 import org.springframework.*;
@@ -17,8 +19,10 @@ import org.springframework.stereotype.Component;
 
 public class StudentsUtility {
 
-	static Connection   connection = null;
+    public static Connection   connection = null;
 	
+    public static List<Question> questionsList = new ArrayList<Question>();
+    
 	public static List<Cls> getClassesList() {
 		List<Cls> classesList = new ArrayList<Cls>();
 		try {
@@ -79,6 +83,36 @@ public class StudentsUtility {
 			closeResources(connection, resultSet, preparedStatement);
 		}
 		return subjectsList;
+	}
+	
+	public static Subject getSubject(String subjectId) {
+		Subject subject = new Subject();
+		ResultSet resultSet = null;
+		PreparedStatement preparedStatement= null;
+		try {
+			connection = DBUtils.getConnection();
+			
+			if (connection != null) {
+				preparedStatement = connection
+						.prepareStatement(Queries.get_subject);
+				preparedStatement.setString(1, subjectId);
+				resultSet = preparedStatement.executeQuery();
+				while (resultSet.next()) {
+					
+
+					subject.setId(resultSet.getString(1));
+					
+					subject.setName(resultSet.getString(2));
+					
+				}
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			closeResources(connection, resultSet, preparedStatement);
+		}
+		return subject;
 	}
 	
 	
@@ -143,6 +177,33 @@ public class StudentsUtility {
 		
 	}
     
+    
+    public static List<Question> getQuestionsForQuestionPaper(String classId,String subjectId){
+    	List<Question> list = new ArrayList<Question>();
+    	Connection connection = DBUtils.getConnection();
+    	PreparedStatement preparedStatement = null;
+    	ResultSet resultSet = null;
+    	String query = Queries.get_questions_list;
+    	try{
+    	preparedStatement = connection.prepareStatement(query);
+    	preparedStatement.setString(1, classId);
+    	preparedStatement.setString(2, subjectId);
+		resultSet = preparedStatement.executeQuery();
+		while(resultSet.next()){
+		Question question = new Question();
+		populateQuestion(question, resultSet);
+		list.add(question);
+		}
+		
+    	}catch(Exception e){
+    		e.printStackTrace();
+    	}finally{
+    		closeResources(connection, resultSet, preparedStatement);
+    	}
+    	return list;
+    }
+    	
+    
     public static void closeResources(Connection connection, ResultSet resultSet,PreparedStatement preparedStatement){
     	try{
     		if(resultSet!=null){
@@ -160,5 +221,36 @@ public class StudentsUtility {
     	}
     }
 	
+	public static Question getQuestion(String classId,String subjectId,String questionId){
+		Connection connection = DBUtils.getConnection();
+    	PreparedStatement preparedStatement = null;
+    	ResultSet resultSet = null;
+    	String query = Queries.get_question;
+    	Question question = new Question();
+    	try{
+    		preparedStatement = connection.prepareStatement(query);
+    		preparedStatement.setString(1, classId);
+    		preparedStatement.setString(2, subjectId);
+    		preparedStatement.setInt(3, Integer.parseInt(questionId));
+    		resultSet = preparedStatement.executeQuery();
+    		while(resultSet.next()){
+    			populateQuestion(question, resultSet);
+    		}
+    		
+    	}catch(Exception e){
+    		e.printStackTrace();
+    	}
+    	return question;
+    	
+	}
 	
+	public static void populateQuestion(Question question, ResultSet resultSet) throws SQLException{
+		
+		question.setId(Integer.parseInt(resultSet.getString(1)));
+		question.setClassId(resultSet.getString(2));
+		question.setSubjectId(resultSet.getString(3));
+		question.setName(resultSet.getString(4));
+		question.setDetails(resultSet.getString(5));
+		question.setMarks(resultSet.getString(6));
+	}
 }
