@@ -1,7 +1,9 @@
 package com.tutorialspoint;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,7 +29,9 @@ import com.beans.Question;
 import com.beans.QuestionPaper;
 import com.beans.Subject;
 import com.google.gson.Gson;
+import com.utils.QuestionPaperUtility;
 import com.utils.StudentsUtility;
+import com.utils.Utility;
 @Controller
 
 public class HelloController {
@@ -85,16 +89,67 @@ public class HelloController {
    }
    
    @RequestMapping(value = "/prepareQuestionPaperAction")
-   public ModelAndView prepareQuestionPaperAction(@Validated QuestionPaper questionPaper,ModelMap map) {
-	   
-	System.out.println("inside addQuestionsAction"+questionPaper.getClassId());
-	
-	List<Question> questionsList = StudentsUtility.getQuestionsForQuestionPaper(questionPaper.getClassId(), questionPaper.getSubjectId());
-	questionPaper.setQuestionsList(questionsList);
-	ModelAndView model = new ModelAndView("question", "command", questionPaper);
-	
-	return model; 
-   }
+	public ModelAndView prepareQuestionPaperAction(
+			@Validated QuestionPaper questionPaper, ModelMap map,
+			HttpServletRequest request) {
+
+		if (!Utility.isEmpty(request.getParameter("marks1"))
+				&& !Utility.isEmpty(request.getParameter("quantity1"))) {
+			int marks1 = Integer.parseInt(request.getParameter("marks1"));
+			int quantity1 = Integer.parseInt(request.getParameter("quantity1"));
+			questionPaper.setMarks1(marks1);
+			questionPaper.setQuantity1(quantity1);
+		}
+		
+		if (!Utility.isEmpty(request.getParameter("marks2"))
+				&& !Utility.isEmpty(request.getParameter("quantity2"))) {
+			int marks2 = Integer.parseInt(request.getParameter("marks2"));
+			int quantity2 = Integer.parseInt(request.getParameter("quantity2"));
+			questionPaper.setMarks2(marks2);
+			questionPaper.setQuantity2(quantity2);
+		}
+		
+		if (!Utility.isEmpty(request.getParameter("marks3"))
+				&& !Utility.isEmpty(request.getParameter("quantity3"))) {
+			int marks3 = Integer.parseInt(request.getParameter("marks3"));
+			int quantity3 = Integer.parseInt(request.getParameter("quantity3"));
+			questionPaper.setMarks3(marks3);
+			questionPaper.setQuantity3(quantity3);
+		}
+		
+		if (!Utility.isEmpty(request.getParameter("marks4"))
+				&& !Utility.isEmpty(request.getParameter("quantity4"))) {
+			int marks4 = Integer.parseInt(request.getParameter("marks4"));
+			int quantity4 = Integer.parseInt(request.getParameter("quantity4"));
+			questionPaper.setMarks4(marks4);
+			questionPaper.setQuantity4(quantity4);
+		}
+		
+		
+		
+		
+		boolean questionsExist = true;
+		Map<String,String> errorMessage = new HashMap<String,String>();
+		questionsExist = StudentsUtility.validateAllMarksQuantity(questionPaper,errorMessage);	
+		ModelAndView model = null;
+		
+		if(!questionsExist){
+		
+		model = new ModelAndView("notEnoughQuestions", "command",
+					"");
+		model.addObject("message", errorMessage.get("message")+ " for class "+questionPaper.getClassId()+ " and subject "+questionPaper.getSubjectName());
+		
+		}else{
+		
+		List<Question> questionsList = StudentsUtility
+				.getQuestionsForQuestionPaper(questionPaper.getClassId(),
+						questionPaper.getSubjectId());
+		questionPaper.setQuestionsList(questionsList);
+		model = new ModelAndView("question", "command",
+				questionPaper);
+		}
+		return model;
+	}
    
    @RequestMapping(value = "/addQuestionToPaperAction" , method=RequestMethod.POST)
    public ModelAndView addQuestionToPaperAction(@Validated QuestionPaper questionPaper,HttpServletRequest request) {

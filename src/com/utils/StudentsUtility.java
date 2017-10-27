@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.text.html.HTMLDocument.HTMLReader.PreAction;
 
@@ -98,14 +99,9 @@ public class StudentsUtility {
 				preparedStatement.setString(1, subjectId);
 				resultSet = preparedStatement.executeQuery();
 				while (resultSet.next()) {
-					
-
 					subject.setId(resultSet.getString(1));
-					
-					subject.setName(resultSet.getString(2));
-					
+				    subject.setName(resultSet.getString(2));
 				}
-				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -253,4 +249,91 @@ public class StudentsUtility {
 		question.setDetails(resultSet.getString(5));
 		question.setMarks(resultSet.getString(6));
 	}
+	
+	public static int getTotalNoOfQuestions(int marks,int quantity,int subjectId,int classId){
+		int count = 0 ;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try{
+			String query = Queries.count_questions;
+			connection = DBUtils.getConnection();
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, classId);
+			preparedStatement.setInt(2, subjectId);
+			preparedStatement.setInt(3, marks);
+			
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				count = resultSet.getInt(1);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			closeResources(connection, resultSet, preparedStatement);
+		}
+		return count;
+		
+	}
+    
+	public static boolean areSufficientQuestionsAvailable(QuestionPaper questionPaper){
+		boolean areSufficientQuestiosAvailable = true;
+		return areSufficientQuestiosAvailable;
+		
+	}
+	
+	
+	
+	public static boolean validateAllMarksQuantity(QuestionPaper questionPaper,Map<String,String> errorMessage){
+		boolean isValid = true ;
+		if (questionPaper.getMarks1() != 0 && questionPaper.getQuantity1() != 0) {
+			int count = getTotalNoOfQuestions(questionPaper.getMarks1(),
+					questionPaper.getQuantity1(),
+					Integer.parseInt(questionPaper.getSubjectId()),
+					Integer.parseInt(questionPaper.getClassId() + ""));
+			if (count <= questionPaper.getQuantity1()) {
+				isValid = false;
+				errorMessage.put("message", "There are not enough questions of marks "+questionPaper.getMarks1());
+			}
+		}
+		
+		if (isValid && questionPaper.getMarks2() != 0 && questionPaper.getQuantity2() != 0) {
+			int count = getTotalNoOfQuestions(questionPaper.getMarks2(),
+					questionPaper.getQuantity2(),
+					Integer.parseInt(questionPaper.getSubjectId()),
+					Integer.parseInt(questionPaper.getClassId() + ""));
+			if (count <= questionPaper.getQuantity2()) {
+				isValid = false;
+				errorMessage.put("message", "There are not enough questions of marks "+questionPaper.getMarks2());
+			}
+		}
+		
+		
+		if (isValid && questionPaper.getMarks3() != 0 && questionPaper.getQuantity3() != 0) {
+			int count = getTotalNoOfQuestions(questionPaper.getMarks3(),
+					questionPaper.getQuantity3(),
+					Integer.parseInt(questionPaper.getSubjectId()),
+					Integer.parseInt(questionPaper.getClassId() + ""));
+			if (count <= questionPaper.getQuantity3()) {
+				isValid = false;
+				errorMessage.put("message", "There are not enough questions of marks "+questionPaper.getMarks3());
+			}
+		}
+		
+		
+		if (isValid && questionPaper.getMarks4() != 0 && questionPaper.getQuantity4() != 0) {
+			int count = getTotalNoOfQuestions(questionPaper.getMarks4(),
+					questionPaper.getQuantity4(),
+					Integer.parseInt(questionPaper.getSubjectId()),
+					Integer.parseInt(questionPaper.getClassId() + ""));
+			if (count <= questionPaper.getQuantity4()) {
+				isValid = false;
+				errorMessage.put("message", "There are not enough questions of marks "+questionPaper.getMarks4());	
+			}
+		}
+		return isValid;
+	}
+	
+	
+	
 }

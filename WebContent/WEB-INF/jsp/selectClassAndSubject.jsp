@@ -114,7 +114,12 @@ function validateForm(){
 	
 	if(isNaN(totalMarks)){
 		alert('total marks must be a number');
+		document.forms["classSubjectForm"]["totalMarks"].value=0;
 	return false;
+	}else if(parseInt(totalMarks)<=0){
+		alert('total marks must be greater than zero');
+		document.forms["classSubjectForm"]["totalMarks"].value=0;
+		return false;
 	}
 	
 	var total1 = document.forms["classSubjectForm"]["total1"].value;
@@ -122,7 +127,10 @@ function validateForm(){
 	var total3 = document.forms["classSubjectForm"]["total3"].value;
 	var total4 = document.forms["classSubjectForm"]["total4"].value;
 	var  sumTotal = parseInt(total1)+parseInt(total2)+parseInt(total3)+parseInt(total3);
-	alert('total1 '+total1+ ' total2'+total2+' total3 '+total3+' total4 '+total4+ ' sum total '+sumTotal);
+	if(parseInt(totalMarks)!=sumTotal){
+	alert('sum of marks for all questions must be equal to total marks ');
+	return false;
+	}
 	return true;
 }
 
